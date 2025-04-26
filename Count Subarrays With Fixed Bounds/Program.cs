@@ -25,7 +25,7 @@ public class Solution
             {
                 maxIndex = i;
             }
-            count += Math.Max(0, Math.Min(minIndex, maxIndex - start + 1));
+            count += Math.Max(0, Math.Min(minIndex, maxIndex) - start + 1);
         }
         return count;
     }
