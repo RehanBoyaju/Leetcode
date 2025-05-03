@@ -1,5 +1,5 @@
 ﻿Solution s = new Solution();
-Console.WriteLine(s.MinDominoRotations(new int[] { 3, 5, 1, 2, 3 }, new int[] { 3, 6, 3, 3, 4 })); // Output: -1
+Console.WriteLine(s.MinDominoRotations(new int[] { 1, 2, 1, 1, 1, 2, 2, 2 }, new int[] { 2, 1, 2, 2, 2, 2, 2, 2 })); // Output: 1
 public class Solution
 {
     public int MinDominoRotations(int[] tops, int[] bottoms)
@@ -12,7 +12,7 @@ public class Solution
         int option2 = bottoms[0];
 
         int count1 = 0;
-        int count2 = 1;
+        int count2 = 0;
         for (int i = 1; i < n; i++)
         {
             if (tops[i] == option1)
@@ -31,10 +31,10 @@ public class Solution
         }
         for (int i = 1; i < n; i++)
         {
-             if(tops[i] == option2){
+             if(bottoms[i] == option2){
                 continue;
             }
-            if (bottoms[i] == option2)
+            if (tops[i] == option2)
             {
                 count2++;
             }
