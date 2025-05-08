@@ -20,7 +20,7 @@ public class Solution
         }
         if(option1 != option2)
         {
-            result = Check(tops, bottoms, n, option2);
+            return Check(tops, bottoms, n, option2);
         }
 
         return -1;
