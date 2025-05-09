@@ -36,7 +36,18 @@ public class Solution
         {
             psum[i] = psum[i + 1] + dict[i];
         }
-        long Dfs(int pos, int evenSum, int oddCnt)
+        var memo = new int[10, target + 1, maxOdd + 1];
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j <= target; j++)
+            {
+                for (int k = 0; k <= maxOdd; k++)
+                {
+                    memo[i, j, k] = -1;
+                }
+            }
+        }
+        int Dfs(int pos, int evenSum, int oddCnt)
         {
             if (oddCnt < 0 || psum[pos] < oddCnt || evenSum > target)
             {
@@ -47,6 +58,10 @@ public class Solution
             {
                 return (evenSum == target && oddCnt == 0) ? 1 : 0;
             }
+            if (memo[pos, evenSum, oddCnt] != -1)
+            {
+                return memo[pos, evenSum, oddCnt];
+            }
             int evenCnt = psum[pos] - oddCnt;
             long res = 0;
             for (int i = Math.Max(0, dict[pos] - evenCnt); i <= Math.Min(dict[pos], oddCnt); i++)
@@ -55,7 +70,8 @@ public class Solution
                 res = (res + ways * Dfs(pos + 1, evenSum + i * pos, oddCnt - i) % MOD) % MOD;
 
             }
-            return res;
+            memo[pos, evenSum, oddCnt] = (int)res;
+            return (int)res;
         }
 
         return (int)Dfs(0, 0, maxOdd);
