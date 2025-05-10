@@ -1,13 +1,14 @@
-﻿Solution s = new Solution();
-Console.WriteLine(s.MinSum(new int[] { 2, 0, 2, 0 }, new int[] { 1, 4 })); // Output: -1
+﻿
+Solution s = new Solution();
+Console.WriteLine(s.MinSum(new int[] { 20, 0, 18, 11, 0, 0, 0, 0, 0, 0, 17, 28, 0, 11, 10, 0, 0, 15, 29 }, new int[] { 16, 9, 25, 16, 1, 9, 20, 28, 8, 0, 1, 0, 1, 27 })); // Output: 169
 public class Solution
 {
     public long MinSum(int[] nums1, int[] nums2)
     {
-        int sum1 = 0;
-        int sum2 = 0;
-        int zeroes1 = 0;
-        int zeroes2 = 0;
+        long sum1 = 0;
+        long sum2 = 0;
+        long zeroes1 = 0;
+        long zeroes2 = 0;
 
         foreach (int num in nums1)
         {
@@ -31,54 +32,34 @@ public class Solution
                 sum2 += num;
             }
         }
-
-        // sum1 = 6 (+ 6)
-        // sum2 = 11 (+ 1);
-        // zeroes1 = 2;
-        // zeroes2 = 1;
-
-        if (zeroes1 == 0)
+        
+       
+        if(zeroes1 == 0 && zeroes2 == 0)
         {
-            if (sum1 < sum2)
+            return sum1 == sum2 ? sum1 : -1;
+        }
+        else if (zeroes1 == 0)
+        {
+            if (sum1 < sum2 || (sum1-sum2)<zeroes2)
             {
                 return -1;
             }
-            int diff = sum1-sum2;
-            if (diff < zeroes2)
-            {
-                return -1;
-            }
+            
             return sum1;
         }
-        if (zeroes2 == 0)
+        else if (zeroes2 == 0)
         {
-            if (sum2 < sum1)
+            if (sum2 < sum1 || (sum2-sum1) < zeroes1)
             {
                 return -1;
             }
-            int diff = sum2 - sum1;
-            if (diff < zeroes1)
-            {
-                return -1;
-            }
+            
             return sum2;
         }
+      
 
-        if (sum1 < sum2)
-        {
-            return sum2 + zeroes2;
-        }
-
-        if (sum2 < sum1)
-        {
-            return sum1 + zeroes1;
-        }
-
-        return Math.Min((sum1 + zeroes1), (sum2 + zeroes2));
-
-
-
-
+       return Math.Max(sum1 + zeroes1, sum2 + zeroes2);
+               
 
     }
 }
