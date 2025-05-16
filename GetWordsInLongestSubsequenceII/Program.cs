@@ -1,60 +1,58 @@
-﻿Solution s = new Solution();
-var res = s.GetWordsInLongestSubsequence(new string[] { "ccd", "bb", "ccc" }, new int[] { 1, 1, 2 });
-Console.WriteLine(string.Join(',', res));
-public class Solution
+﻿public class Solution
 {
-    public IList<string> GetWordsInLongestSubsequence(string[] words, int[] groups)
+    public IList<string> GetWordsInLongestSubsequence(string[] words,
+                                                      int[] groups)
     {
-        IList<string> res = new();
-        void Solve(int index, int prevIndex, IList<string> curr)
+        int n = groups.Length;
+        int[] dp = new int[n];
+        int[] prev = new int[n];
+        Array.Fill(dp, 1);
+        Array.Fill(prev, -1);
+        int maxIndex = 0;
+
+        for (int i = 1; i < n; i++)
         {
-
-            if (curr.Count > res.Count)
+            for (int j = 0; j < i; j++)
             {
-                res = new List<string>(curr);
-            }
-
-
-
-            for (int i = index; i < words.Length; i++)
-            {
-                if (groups[prevIndex] != groups[i] && CheckHammingDistance(words[prevIndex], words[i]))
+                if (Check(words[i], words[j]) && dp[j] + 1 > dp[i] &&
+                    groups[i] != groups[j])
                 {
-                    curr.Add(words[i]);
-                    Solve(i + 1, i, curr);
-                    curr.RemoveAt(curr.Count - 1);
+                    dp[i] = dp[j] + 1;
+                    prev[i] = j;
                 }
             }
-
-
-
-        }
-        bool CheckHammingDistance(string word1, string word2)
-        {
-            if (word1.Length != word2.Length)
+            if (dp[i] > dp[maxIndex])
             {
-                return false;
+                maxIndex = i;
             }
-            int count = 0;
-            for (int i = 0; i < word1.Length; i++)
+        }
+
+        List<string> ans = new List<string>();
+        for (int i = maxIndex; i >= 0; i = prev[i])
+        {
+            ans.Add(words[i]);
+        }
+        ans.Reverse();
+        return ans;
+    }
+
+    private bool Check(string s1, string s2)
+    {
+        if (s1.Length != s2.Length)
+        {
+            return false;
+        }
+        int diff = 0;
+        for (int i = 0; i < s1.Length; i++)
+        {
+            if (s1[i] != s2[i])
             {
-                if (word1[i] != word2[i])
+                if (++diff > 1)
                 {
-                    if (count == 1)
-                    {
-                        return false;
-                    }
-                    count++;
+                    return false;
                 }
-
             }
-            return true;
         }
-        for (int i = 0; i < words.Length; i++)
-        {
-            Solve(i + 1, i, new List<string>() { words[i] });
-        }
-
-        return res;
+        return diff == 1;
     }
 }
