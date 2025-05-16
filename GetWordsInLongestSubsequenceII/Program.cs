@@ -1,35 +1,33 @@
 ﻿Solution s = new Solution();
-var res = s.GetWordsInLongestSubsequence(new string[] { "a", "b", "c", "d" } , new int[] { 1, 2, 3,4 });
-Console.WriteLine(string.Join(',',res));
+var res = s.GetWordsInLongestSubsequence(new string[] { "ccd", "bb", "ccc" }, new int[] { 1, 1, 2 });
+Console.WriteLine(string.Join(',', res));
 public class Solution
 {
     public IList<string> GetWordsInLongestSubsequence(string[] words, int[] groups)
     {
-        IList<string> res = new List<string>();
-        void Solve(int index, int prevGroup, string prevWord, IList<string> curr)
+        IList<string> res = new();
+        void Solve(int index, int prevIndex, IList<string> curr)
         {
-            if (index == words.Length)
+
+            if (curr.Count > res.Count)
             {
-                if (curr.Count > res.Count)
-                {
-                    res = new List<string>(curr);
-                }
-                return;
-            }
-            if (words[index].Length != prevWord.Length || groups[index] == prevGroup)
-            {
-                return;
+                res = new List<string>(curr);
             }
 
-            for (int i = index ; i < words.Length; i++)
+
+
+            for (int i = index; i < words.Length; i++)
             {
-                if (prevGroup != groups[i] && CheckHammingDistance(prevWord, words[index]))
+                if (groups[prevIndex] != groups[i] && CheckHammingDistance(words[prevIndex], words[i]))
                 {
-                    curr.Add(words[index]);
-                    Solve(i + 1, groups[i], words[i], curr);
+                    curr.Add(words[i]);
+                    Solve(i + 1, i, curr);
                     curr.RemoveAt(curr.Count - 1);
                 }
             }
+
+
+
         }
         bool CheckHammingDistance(string word1, string word2)
         {
@@ -52,7 +50,11 @@ public class Solution
             }
             return true;
         }
-        Solve(1, groups[0], words[0], new List<string>() { words[0] });
+        for (int i = 0; i < words.Length; i++)
+        {
+            Solve(i + 1, i, new List<string>() { words[i] });
+        }
+
         return res;
     }
 }
