@@ -10,71 +10,71 @@ public class Solution
 
         int mod = 1_000_000_007;
         List<int> RunLengths = new List<int>();
-        char prev = word[0];
         int count = 1;
 
         long totalPerms = 1;
         for (int i = 1; i < word.Length; i++)
         {
-            if (prev == word[i])
+            if (word[i - 1] == word[i])
             {
                 count++;
             }
             else
             {
-                prev = word[i];
                 RunLengths.Add(count);
-                totalPerms = (totalPerms * count)%mod;
+                totalPerms = (totalPerms * count) % mod;
                 count = 1;
             }
         }
         RunLengths.Add(count);
-        totalPerms = (totalPerms * count)%mod;
-
+        totalPerms = (totalPerms * count) % mod;
 
         int n = RunLengths.Count;
 
-        int[] curr = new int[k];
-        int[] next = new int[k];
+        if (n >= k)
+        {
+            return (int)totalPerms;
+        }
+
+
+
         int[] prefix = new int[k + 1];
 
-        for (int j=0; j < k; j++)
+        for (int j = 0; j < k; j++)
         {
-            next[j] = 1;
-            prefix[j +1] = (prefix[j] + next[j]) % mod; 
+            prefix[j + 1] = (prefix[j] + 1) % mod;
         }
-        
+
+        int[] curr = new int[k];
 
         for (int i = n - 1; i >= 0; i--)
         {
-            curr = new int[k];
-            for(int j = k -1 ; j >= 0; j--)
+            Array.Clear(curr, 0, k);
+            int run = RunLengths[i];
+            for (int j = 0; j < k; j++)
             {
 
                 int l = j + 1;
-                int r = j + RunLengths[i];
+                int r = j + run;
                 if (r >= k) r = k - 1;
 
                 if (l <= r)
                 {
                     curr[j] = (prefix[r + 1] - prefix[l] + mod) % mod;
                 }
-               
-            }
-            for (int j = 0; j < k; j++)
-            {
-                prefix[j + 1] = (prefix[j] + curr[j]) % mod;
-            }
-            var temp = curr;
-            curr = next;
-            next = temp;
-        }
-        
 
-        int invalid = next[0];
-        
+                prefix[j + 1] = (prefix[j] + curr[j]) % mod;
+
+            }
+
+
+        }
+
+
+        int invalid = curr[0];
+
         return (int)((totalPerms - invalid + mod) % mod);
 
-        
+
     }
 }
