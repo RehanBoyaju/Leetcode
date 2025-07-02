@@ -34,24 +34,33 @@ public class Solution
 
         int n = RunLengths.Count;
         int[,] dp = new int[n + 1, k];
+        int[,] prefixSums = new int[n + 2, k + 1];
 
         for (int j=0; j < k; j++)
         {
             dp[n,j] = 1;
+            prefixSums[n,j +1] = (prefixSums[n,j] + dp[n,j]) % mod; 
         }
+        
 
-        for(int i = n - 1; i >= 0; i--)
+        for (int i = n - 1; i >= 0; i--)
         {
             for(int j = k -1 ; j >= 0; j--)
             {
-                int ans = 0;
-                for (int m = 0; m < RunLengths[i]; m++)
+
+                int l = j + 1;
+                int r = j + RunLengths[i];
+                if (r >= k) r = k - 1;
+
+                if (l <= r)
                 {
-                    int next = j + m + 1;
-                    if (next >= k) break;
-                    ans = (ans + dp[i + 1, next]) % mod;
+                    dp[i, j] = (prefixSums[i + 1, r + 1] - prefixSums[i + 1, l] + mod) % mod;
                 }
-                dp[i,j] = ans;
+               
+            }
+            for (int j = 0; j < k; j++)
+            {
+                prefixSums[i, j + 1] = (prefixSums[i, j] + dp[i, j]) % mod;
             }
         }
         
