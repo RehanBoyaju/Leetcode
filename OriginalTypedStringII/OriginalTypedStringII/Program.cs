@@ -33,18 +33,21 @@ public class Solution
 
 
         int n = RunLengths.Count;
-        int[,] dp = new int[n + 1, k];
-        int[,] prefixSums = new int[n + 2, k + 1];
+
+        int[] curr = new int[k];
+        int[] next = new int[k];
+        int[] prefix = new int[k + 1];
 
         for (int j=0; j < k; j++)
         {
-            dp[n,j] = 1;
-            prefixSums[n,j +1] = (prefixSums[n,j] + dp[n,j]) % mod; 
+            next[j] = 1;
+            prefix[j +1] = (prefix[j] + next[j]) % mod; 
         }
         
 
         for (int i = n - 1; i >= 0; i--)
         {
+            curr = new int[k];
             for(int j = k -1 ; j >= 0; j--)
             {
 
@@ -54,18 +57,21 @@ public class Solution
 
                 if (l <= r)
                 {
-                    dp[i, j] = (prefixSums[i + 1, r + 1] - prefixSums[i + 1, l] + mod) % mod;
+                    curr[j] = (prefix[r + 1] - prefix[l] + mod) % mod;
                 }
                
             }
             for (int j = 0; j < k; j++)
             {
-                prefixSums[i, j + 1] = (prefixSums[i, j] + dp[i, j]) % mod;
+                prefix[j + 1] = (prefix[j] + curr[j]) % mod;
             }
+            var temp = curr;
+            curr = next;
+            next = temp;
         }
         
 
-        int invalid = dp[0, 0];
+        int invalid = next[0];
         
         return (int)((totalPerms - invalid + mod) % mod);
 
