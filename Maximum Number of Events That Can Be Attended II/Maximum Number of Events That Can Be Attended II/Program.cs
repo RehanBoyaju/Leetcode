@@ -8,32 +8,26 @@ public class Solution
 
         int n = events.Length;
         int[][] dp = new int[n + 1][];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i <= n; i++)
         {
             dp[i] = new int[k + 1];
-            Array.Fill(dp[i], -1);
         }
 
-        int Solve(int i, int count)
+       
+        for(int i = n-1; i >=0; i--)
         {
-            if (i == n || count == k)
-            {
-                return 0;
-            }
-            if (dp[i][count] != -1)
-            {
-                return dp[i][count];
-            }
-
             int next = BinarySearch(i + 1, events[i][1]);
 
-            int take = events[i][2] + Solve(next, count + 1);
-            int skip = Solve(i + 1, count);
-            int res = Math.Max(take, skip);
+            for (int j = k-1; j >= 0; j--)
+            {
+                int take = events[i][2] + dp[next][ j + 1];
+                int skip = dp[i + 1][j];
+                dp[i][j] = Math.Max(take, skip);
 
-            dp[i][count] = res;
-            return res;
+            }
         }
+
         int BinarySearch(int left, int prevEnd)
         {
             int right = n;
@@ -51,6 +45,6 @@ public class Solution
             }
             return left;
         }
-        return Solve(0, 0);
+        return dp[0][0];
     }
 }
